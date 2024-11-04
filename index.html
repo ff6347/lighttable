@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<title>Lighttable</title>
+	<style>
+		/* Base styles */
+		:root {
+			--bg-color: #ffffff;
+			--text-color: #333333;
+		}
+
+		[data-theme="dark"] {
+			--bg-color: #1e1e1e;
+			--text-color: #ffffff;
+		}
+
+		body {
+			margin: 0;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background-color: var(--bg-color);
+			color: var(--text-color);
+			transition: background-color 0.3s;
+			font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+			font-weight: normal;
+		}
+
+		#dropZone {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			/* border: 2px dashed #666; */
+		}
+
+		#preview {
+			max-width: 90%;
+			max-height: 90vh;
+		}
+
+		#themeToggleLabel {
+			position: fixed;
+			top: 8px;
+			left: 8px;
+			/* padding: 8px; */
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		input[type="checkbox"] {
+			accent-color: #808080;
+		}
+
+	</style>
+</head>
+
+<body>
+	<label for="themeToggle" id="themeToggleLabel"><input type="checkbox" id="themeToggle" autocomplete="off">Dark/Light mode</label>
+	<div id="dropZone">
+		<p>Drop image here</p>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			// Theme toggle functionality
+			const themeToggle = document.getElementById('themeToggle');
+			themeToggle.addEventListener('click', () => {
+				document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+			});
+
+			// Drop zone functionality
+			const dropZone = document.getElementById('dropZone');
+
+			['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+				dropZone.addEventListener(eventName, preventDefaults);
+			});
+
+			function preventDefaults(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			}
+
+			dropZone.addEventListener('drop', handleDrop);
+
+			function handleDrop(e) {
+				const file = e.dataTransfer.files[0];
+				if (file && file.type.startsWith('image/')) {
+					const reader = new FileReader();
+					reader.onload = function (event) {
+						dropZone.innerHTML = `<img src="${event.target.result}" id="preview">`;
+					};
+					reader.readAsDataURL(file);
+				}
+			}
+			// set default theme based on system preference
+			if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				document.body.dataset.theme = 'dark';
+				themeToggle.checked = true;
+			}
+		});
+	</script>
+</body>
+
+</html>

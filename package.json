@@ -1,0 +1,17 @@
+{
+	"name": "lighttable",
+	"version": "0.1.0",
+	"main": "index.html",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 0",
+		"dev": "live-server --port=8080 --entry-file=index.html"
+	},
+	"keywords": [],
+	"author": "ff6347 <hash@ff6347.email>",
+	"license": "MIT",
+	"description": "",
+	"type": "module",
+	"devDependencies": {
+		"live-server": "1.2.2"
+	}
+}
